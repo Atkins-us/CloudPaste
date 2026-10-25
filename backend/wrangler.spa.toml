@@ -51,11 +51,21 @@ not_found_handling = "single-page-application"
 
 # 配置：明确指定这些路径优先进入 Worker 处理
 # 防止 API 请求被 SPA fallback 拦截
-# diagnostic: temporarily route all requests to Worker first
-run_worker_first = ["/api/*", "/dav/*", "/*"]
+run_worker_first = ["/api/*", "/dav/*"]
 
 # ==================== 路由优先级说明 ====================
 # 1. /api/* 和 /dav/* -> 优先进入 Worker 处理（run_worker_first）
 # 2. 静态文件存在 -> 直接返回（不调用 Worker）
 # 3. 前端路由（浏览器导航）-> 返回 index.html（SPA fallback）
 # 4. 导航请求在 compatibility_date >= 2025-04-01 时不计费
+
+# ==================== Workers Observability 配置 ====================
+# 与 Dashboard 已开启的配置保持一致，避免后续部署重置日志开关
+# logs enabled、invocation_logs、persist、采样 100%
+[observability]
+head_sampling_rate = 1
+
+[observability.logs]
+enabled = true
+invocation_logs = true
+persist = true
