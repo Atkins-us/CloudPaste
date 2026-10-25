@@ -27,17 +27,8 @@ const isCloudflareWorkers = (() => {
   }
 })();
 
-// Cloudflare Workflows 条件导出（仅在 Workers 环境下实际使用）
-export const JobWorkflow = isCloudflareWorkers
-  ? (await import("./src/workflows/JobWorkflow.ts")).JobWorkflow
-  : class JobWorkflow {
-      constructor() {
-        console.warn("JobWorkflow 在 Node 环境下不可用");
-      }
-      async run() {
-        throw new Error("JobWorkflow 仅在 Cloudflare Workers 环境下可用");
-      }
-    };
+// Cloudflare Workflows 无条件导出真正的 WorkflowEntrypoint 子类
+export const JobWorkflow = (await import("./src/workflows/JobWorkflow.ts")).JobWorkflow;
 
 // ============ Cloudflare Workers 环境导出 ============
 // 默认导出 fetch，只在 Workers 环境下由 Cloudflare 调用；
